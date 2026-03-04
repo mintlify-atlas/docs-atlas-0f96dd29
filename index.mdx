@@ -1,97 +1,214 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Mintlify One-Click Extension
+description: Instantly access production-quality documentation for any GitHub repository
+mode: custom
 ---
 
-## Setting up
+<div className="relative w-full overflow-hidden bg-gradient-to-br from-[#0D9373] via-[#0b7d63] to-[#095a4a] dark:from-[#0D9373] dark:via-[#0b7d63] dark:to-[#095a4a] py-20">
+  <div className="max-w-6xl mx-auto px-6 lg:px-8">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+      <div className="lg:col-span-7">
+        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+          Instant Docs for Any GitHub Repo
+        </h1>
+        <p className="text-lg sm:text-xl text-white/90 max-w-2xl mb-8">
+          One-click Chrome extension that adds a "View Docs on Mintlify" button to every GitHub repository. Transform any codebase into beautiful, production-ready documentation.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <a 
+            href="/installation" 
+            className="inline-flex items-center px-6 py-3 rounded-lg bg-white text-[#0D9373] font-semibold hover:bg-gray-100 transition-colors"
+          >
+            Get Started
+            <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </a>
+          <a 
+            href="/quickstart" 
+            className="inline-flex items-center px-6 py-3 rounded-lg border border-white/30 bg-white/10 text-white font-semibold hover:bg-white/20 transition-colors"
+          >
+            Quick Start Guide
+          </a>
+        </div>
+      </div>
+      <div className="lg:col-span-5 hidden lg:block">
+        <div className="relative">
+          <div className="absolute inset-0 bg-white/10 rounded-2xl backdrop-blur-sm"></div>
+          <div className="relative p-8">
+            <div className="flex items-center gap-3 mb-6">
+              <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                <line x1="8" y1="7" x2="16" y2="7" />
+                <line x1="8" y1="11" x2="14" y2="11" />
+              </svg>
+              <div>
+                <div className="text-white font-bold text-xl">View Docs on Mintlify</div>
+                <div className="text-white/70 text-sm">facebook/react</div>
+              </div>
+            </div>
+            <div className="text-white/60 text-sm">
+              Seamlessly integrated into every GitHub repo page
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-Get your documentation site up and running in minutes.
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Get started in seconds
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Install the extension and start exploring documentation for any GitHub repository
+  </p>
+  
+  <Steps>
+    <Step title="Install the extension">
+      Clone the repository and load it as an unpacked Chrome extension
+      
+      ```bash
+      git clone https://github.com/apurv-1/mintlify-oneclick-extension.git
+      ```
+      
+      <Note>
+        Open Chrome, navigate to `chrome://extensions`, enable Developer mode, and click "Load unpacked" to select the cloned folder.
+      </Note>
+    </Step>
+    
+    <Step title="Visit any GitHub repository">
+      Navigate to any GitHub repository page in your browser
+      
+      The extension automatically detects valid repository pages and injects the "View Docs on Mintlify" button next to the Watch, Fork, and Star buttons.
+    </Step>
+    
+    <Step title="Access instant documentation">
+      Click the button to view auto-generated Mintlify documentation
+      
+      ```
+      github.com/facebook/react → mintlify.com/facebook/react
+      ```
+      
+      <Tip>
+        The extension works with all public GitHub repositories and intelligently filters out non-repository pages like settings, marketplace, and trending.
+      </Tip>
+    </Step>
+  </Steps>
+</div>
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Explore the extension
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Learn how to use, customize, and contribute to the project
+  </p>
+  
+  <CardGroup cols={2}>
+    <Card title="Usage guide" icon="circle-play" href="/usage/overview">
+      Learn how to use the extension and customize your experience
+    </Card>
+    <Card title="Examples" icon="lightbulb" href="/usage/examples">
+      See real-world examples of popular repositories
+    </Card>
+    <Card title="Architecture" icon="sitemap" href="/development/architecture">
+      Understand how the extension works under the hood
+    </Card>
+    <Card title="Contributing" icon="code-pull-request" href="/development/contributing">
+      Help improve the extension by contributing code or ideas
+    </Card>
+  </CardGroup>
+</div>
 
-## Make it yours
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+    Key features
+  </h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">
+    Everything you need for seamless documentation access
+  </p>
+  
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="p-6 rounded-xl border dark:border-[#27272a] border-gray-200 dark:bg-[#1a1d27] bg-gray-50">
+      <div className="w-10 h-10 rounded-lg bg-[#0D9373]/10 dark:bg-[#0D9373]/20 flex items-center justify-center mb-4">
+        <svg className="w-6 h-6 text-[#0D9373]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">One-click access</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Instantly navigate from any GitHub repository to its Mintlify documentation with a single click
+      </p>
+    </div>
+    
+    <div className="p-6 rounded-xl border dark:border-[#27272a] border-gray-200 dark:bg-[#1a1d27] bg-gray-50">
+      <div className="w-10 h-10 rounded-lg bg-[#0D9373]/10 dark:bg-[#0D9373]/20 flex items-center justify-center mb-4">
+        <svg className="w-6 h-6 text-[#0D9373]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Seamless integration</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Button automatically appears in GitHub's UI next to Watch, Fork, and Star actions
+      </p>
+    </div>
+    
+    <div className="p-6 rounded-xl border dark:border-[#27272a] border-gray-200 dark:bg-[#1a1d27] bg-gray-50">
+      <div className="w-10 h-10 rounded-lg bg-[#0D9373]/10 dark:bg-[#0D9373]/20 flex items-center justify-center mb-4">
+        <svg className="w-6 h-6 text-[#0D9373]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Toggle control</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Enable or disable the extension anytime through the popup interface
+      </p>
+    </div>
+    
+    <div className="p-6 rounded-xl border dark:border-[#27272a] border-gray-200 dark:bg-[#1a1d27] bg-gray-50">
+      <div className="w-10 h-10 rounded-lg bg-[#0D9373]/10 dark:bg-[#0D9373]/20 flex items-center justify-center mb-4">
+        <svg className="w-6 h-6 text-[#0D9373]" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Smart URL parsing</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Automatically validates GitHub URLs and filters out non-repository pages
+      </p>
+    </div>
+  </div>
+</div>
 
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="rounded-2xl border dark:border-[#27272a] border-gray-200 dark:bg-[#1a1d27] bg-gray-50 p-8 sm:p-12 text-center">
+    <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
+      Ready to get started?
+    </h2>
+    <p className="text-base text-gray-600 dark:text-gray-400 mb-8 max-w-2xl mx-auto">
+      Install the extension in minutes and start exploring beautiful documentation for all your favorite GitHub repositories
+    </p>
+    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <a 
+        href="/installation" 
+        className="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-[#0D9373] text-white font-semibold hover:bg-[#0b7d63] transition-colors"
+      >
+        Install Now
+        <svg className="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+      <a 
+        href="https://github.com/apurv-1/mintlify-oneclick-extension" 
+        className="inline-flex items-center justify-center px-6 py-3 rounded-lg border dark:border-[#27272a] border-gray-200 dark:bg-[#242838] bg-white text-gray-900 dark:text-white font-semibold hover:dark:bg-[#2d3142] hover:bg-gray-50 transition-colors"
+      >
+        View on GitHub
+        <svg className="ml-2 w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</div>

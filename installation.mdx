@@ -1,0 +1,118 @@
+---
+title: Installation
+description: Install the Mintlify One-Click Extension in your Chrome browser
+---
+
+The Mintlify One-Click Extension is compatible with Chrome and Chromium-based browsers. Follow these steps to install it locally from source.
+
+## Prerequisites
+
+Before installing the extension, ensure you have:
+
+- **Google Chrome** (or a Chromium-based browser like Edge, Brave, or Arc)
+- **Git** installed on your system
+- Basic familiarity with navigating to browser extension settings
+
+<Note>
+  The extension requires Chrome's Developer Mode to be enabled for local installation. This is a standard requirement for loading unpacked extensions.
+</Note>
+
+## Installation steps
+
+<Steps>
+  <Step title="Clone the repository">
+    Open your terminal and clone the extension source code:
+    
+    ```bash
+    git clone https://github.com/apurv-1/mintlify-oneclick-extension.git
+    cd mintlify-oneclick-extension
+    ```
+    
+    This downloads all the necessary files to your local machine.
+  </Step>
+  
+  <Step title="Open Chrome extensions page">
+    Navigate to Chrome's extensions management page by either:
+    
+    - Typing `chrome://extensions` in your address bar, or
+    - Clicking the three-dot menu → **Extensions** → **Manage Extensions**
+  </Step>
+  
+  <Step title="Enable Developer mode">
+    Toggle the **Developer mode** switch in the top-right corner of the extensions page.
+    
+    <Warning>
+      Developer mode must be enabled to load unpacked extensions. This is safe and only affects your ability to install local extensions.
+    </Warning>
+  </Step>
+  
+  <Step title="Load the extension">
+    Click the **Load unpacked** button that appears after enabling Developer mode.
+    
+    In the file picker dialog, navigate to and select the `source` folder inside the cloned repository (e.g., `mintlify-oneclick-extension/source`).
+  </Step>
+  
+  <Step title="Verify installation">
+    After loading, you should see the Mintlify extension card appear in your extensions list with:
+    
+    - Extension name: "Mintlify Docs — Auto Docs for Any GitHub Repo"
+    - Version: 1.0.0
+    - Status: Enabled (toggle should be on)
+    
+    The extension icon should also appear in your browser toolbar.
+  </Step>
+</Steps>
+
+## Verify it works
+
+To confirm the extension is working correctly:
+
+1. Visit any GitHub repository (e.g., [github.com/facebook/react](https://github.com/facebook/react))
+2. Look for the **View Docs on Mintlify** button in the repository's action bar
+3. The button should appear next to the Watch, Fork, and Star buttons
+
+<Tip>
+  If you don't see the button, try refreshing the page or checking that the extension is enabled in `chrome://extensions`.
+</Tip>
+
+## Permissions explained
+
+The extension requests the following permissions:
+
+| Permission | Purpose |
+| --- | --- |
+| `storage` | Saves your enable/disable preference |
+| `activeTab` | Detects when you're viewing a GitHub repository |
+| `github.com/*` | Injects the action button on GitHub pages |
+
+<Note>
+  The extension only activates on GitHub.com and does not access or collect any personal data.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Button doesn't appear on GitHub">
+    - Ensure the extension is enabled in `chrome://extensions`
+    - Refresh the GitHub page after enabling the extension
+    - Verify you're on a valid repository page (not the GitHub homepage or settings)
+  </Accordion>
+  
+  <Accordion title="Extension shows as disabled">
+    - Click the extension icon in your toolbar
+    - Toggle the "Extension enabled" switch to on
+    - Refresh any open GitHub tabs
+  </Accordion>
+  
+  <Accordion title="Can't find Developer mode toggle">
+    - Make sure you're on the `chrome://extensions` page
+    - The toggle is located in the top-right corner
+    - If using a different Chromium browser, the location may vary slightly
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<Card title="Quick start" icon="rocket" href="/quickstart">
+  Learn how to use the extension on your first repository
+</Card>

@@ -1,0 +1,104 @@
+---
+title: "Enabling and Disabling"
+description: "Control when the Mintlify button appears on GitHub pages"
+---
+
+The extension can be easily enabled or disabled through the popup interface, giving you control over when the "View Docs on Mintlify" button appears on GitHub pages.
+
+## Accessing the Popup
+
+Click the Mintlify extension icon in your browser's toolbar to open the popup interface. The popup displays:
+
+- The current repository name (if viewing a valid GitHub repo)
+- A quick-access link to view docs on Mintlify
+- An "Extension enabled" toggle switch
+
+## Toggling the Extension
+
+The popup includes a toggle switch labeled "Extension enabled" that controls whether the extension is active:
+
+<Steps>
+  <Step title="Open the popup">
+    Click the Mintlify extension icon in your browser toolbar.
+  </Step>
+  
+  <Step title="Toggle the switch">
+    Click the toggle switch to enable or disable the extension.
+  </Step>
+  
+  <Step title="Changes take effect immediately">
+    The button will appear or disappear from GitHub pages instantly.
+  </Step>
+</Steps>
+
+## Settings Persistence
+
+Your preference is automatically saved using Chrome's sync storage:
+
+```javascript
+chrome.storage.sync.set({ enabled: toggleEnabled.checked });
+```
+
+This means:
+
+<CardGroup cols={2}>
+  <Card title="Synced Across Devices" icon="cloud">
+    Your enable/disable preference syncs across all Chrome browsers where you're signed in with the same Google account.
+  </Card>
+  
+  <Card title="Persists After Restart" icon="rotate">
+    Your preference is saved even if you close and reopen your browser.
+  </Card>
+  
+  <Card title="Default Enabled" icon="toggle-on">
+    The extension is enabled by default when first installed.
+  </Card>
+  
+  <Card title="Instant Updates" icon="bolt">
+    Changes to the setting take effect immediately on all open GitHub tabs.
+  </Card>
+</CardGroup>
+
+## What Happens When Disabled
+
+When you disable the extension:
+
+1. **Button Removal**: The "View Docs on Mintlify" button is immediately removed from all open GitHub repository pages
+
+2. **No Auto-Injection**: The button won't be injected when you navigate to new repository pages
+
+3. **Popup Still Works**: You can still use the quick-access link in the popup to open Mintlify docs for the current repository
+
+4. **Re-enabling**: Toggle the switch back on to restore the button on GitHub pages
+
+## Technical Implementation
+
+The extension listens for storage changes to update the button state in real-time:
+
+```javascript
+chrome.storage.onChanged.addListener(() => {
+  cleanup();
+  init();
+});
+```
+
+When the setting changes:
+- The content script receives the storage change event
+- It removes any existing button (`cleanup()`)
+- It checks the new setting and re-injects the button if enabled (`init()`)
+
+<Tip>
+If you're working on GitHub pages where you don't need the button, simply disable the extension temporarily. You can re-enable it anytime without losing your preference.
+</Tip>
+
+## Default State on Installation
+
+When you first install the extension, it's automatically enabled:
+
+```javascript
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.set({ enabled: true });
+});
+```
+
+This ensures you can start using the extension immediately after installation without any additional configuration.

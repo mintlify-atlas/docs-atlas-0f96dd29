@@ -1,0 +1,322 @@
+---
+title: 'Contributing'
+description: 'How to contribute to the Mintlify One-Click Extension'
+---
+
+We welcome contributions to the Mintlify One-Click Extension! Whether you're fixing bugs, adding features, or improving documentation, your help is appreciated.
+
+## Ways to Contribute
+
+<CardGroup cols={2}>
+  <Card title="Report Issues" icon="bug">
+    Found a bug? Open an issue on GitHub with reproduction steps
+  </Card>
+  <Card title="Submit Pull Requests" icon="code-pull-request">
+    Fix bugs, add features, or improve code quality
+  </Card>
+  <Card title="Improve Docs" icon="book">
+    Help us make the documentation clearer and more comprehensive
+  </Card>
+  <Card title="Test & Feedback" icon="vial">
+    Test the extension and provide feedback on UX and functionality
+  </Card>
+</CardGroup>
+
+## Getting Started
+
+### Prerequisites
+
+- Google Chrome or Chromium-based browser
+- Git for version control
+- Basic understanding of Chrome Extensions and JavaScript
+
+### Local Development Setup
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/apurv-1/mintlify-oneclick-extension.git
+    cd mintlify-oneclick-extension
+    ```
+  </Step>
+  
+  <Step title="Load extension in Chrome">
+    1. Open Chrome and navigate to `chrome://extensions`
+    2. Enable **Developer mode** (toggle in top-right)
+    3. Click **Load unpacked**
+    4. Select the cloned `source/` directory
+  </Step>
+  
+  <Step title="Verify installation">
+    - The extension icon should appear in your toolbar
+    - Visit any GitHub repository (e.g., `github.com/facebook/react`)
+    - You should see the "View Docs on Mintlify" button
+  </Step>
+</Steps>
+
+<Info>
+  The extension will reload automatically when you make changes to the code. For some changes (like `manifest.json`), you may need to click the reload button in `chrome://extensions`.
+</Info>
+
+## Making Changes
+
+### Development Workflow
+
+1. **Create a branch** for your changes
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Make your changes** in the appropriate files:
+   - Button injection logic: `content/content.js`
+   - Button styling: `content/content.css`
+   - Popup UI: `popup/popup.html`, `popup/popup.js`, `popup/popup.css`
+   - Background logic: `background/service-worker.js`
+   - Extension config: `manifest.json`
+
+3. **Test thoroughly** (see [Testing Changes](#testing-changes) below)
+
+4. **Commit your changes** with clear messages
+   ```bash
+   git add .
+   git commit -m "Add feature: describe your change"
+   ```
+
+5. **Push and create a pull request**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+### Testing Changes
+
+Thoroughly test your changes across different scenarios:
+
+<Accordion title="Test different repository types">
+  - Public repositories (e.g., `facebook/react`)
+  - Repositories with special characters in name (e.g., `vercel/next.js`)
+  - User vs organization repositories
+  - Edge cases: empty repos, archived repos, private repos
+</Accordion>
+
+<Accordion title="Test GitHub page types">
+  - Repository home page
+  - Code tab
+  - Issues tab
+  - Pull requests tab
+  - Settings (button should NOT appear)
+  - Non-repository pages like explore, trending
+</Accordion>
+
+<Accordion title="Test SPA navigation">
+  - Navigate between repositories without page reload
+  - Navigate between tabs within a repository
+  - Use browser back/forward buttons
+  - Verify button updates correctly on each navigation
+</Accordion>
+
+<Accordion title="Test extension settings">
+  - Toggle extension on/off in popup
+  - Verify button disappears when disabled
+  - Verify button reappears when re-enabled
+  - Test with fresh install (clear storage)
+</Accordion>
+
+<Accordion title="Test button functionality">
+  - Click button and verify it opens correct Mintlify URL
+  - Verify link opens in new tab
+  - Check button styling and hover states
+  - Test on different GitHub UI layouts (desktop, mobile)
+</Accordion>
+
+<Tip>
+  Use Chrome DevTools (`F12`) to check for JavaScript errors in the console and inspect the injected button element.
+</Tip>
+
+### Debugging Tips
+
+**Content Script Debugging:**
+- Open DevTools on any GitHub page
+- Check Console tab for errors from `content.js`
+- Use `console.log()` statements to trace execution
+- Inspect the injected button with Elements tab
+
+**Popup Debugging:**
+- Right-click the extension icon
+- Select "Inspect popup"
+- DevTools opens for the popup context
+
+**Service Worker Debugging:**
+- Go to `chrome://extensions`
+- Click "Inspect views: service worker" under your extension
+- Check Console and Application tabs
+
+**Storage Inspection:**
+- In DevTools, go to Application tab
+- Navigate to Storage → Extension Storage
+- View and modify `enabled` setting
+
+## Code Style Guidelines
+
+### JavaScript
+
+- Use **strict mode** (`"use strict"`)
+- Use **const** and **let**, avoid `var`
+- Prefer **arrow functions** for callbacks
+- Use **meaningful variable names** (e.g., `parseGitHubRepo` not `pgr`)
+- Add **comments** for non-obvious logic
+- Keep functions **small and focused**
+
+```javascript Good Example
+function parseGitHubRepo() {
+  const path = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
+  const segments = path.split("/");
+  if (segments.length < 2) return null;
+  
+  const owner = segments[0];
+  const repo = segments[1];
+  
+  // Filter out GitHub's reserved paths
+  const reserved = ["settings", "explore", "marketplace"];
+  if (reserved.includes(owner)) return null;
+  
+  return { owner, repo, fullName: `${owner}/${repo}` };
+}
+```
+
+### CSS
+
+- Use **specific class names** with prefixes (e.g., `mintlify-*`)
+- Include **!important** only when necessary to override GitHub styles
+- Use **consistent spacing** (2 spaces indentation)
+- Group **related properties** together
+- Add **comments** for non-obvious rules
+
+```css Good Example
+.mintlify-repo-action-btn {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  height: 28px;
+  
+  /* Colors */
+  background: #0D9373;
+  color: #fff !important;
+  
+  /* Typography */
+  font-size: 12px;
+  font-weight: 600;
+}
+```
+
+### HTML
+
+- Use **semantic HTML** elements
+- Include **accessibility attributes** (ARIA labels, alt text)
+- Keep **structure clean** and well-indented
+- Use **double quotes** for attributes
+
+### General Principles
+
+<CardGroup cols={2}>
+  <Card title="Keep it simple" icon="hand-sparkles">
+    Prefer simple, readable code over clever solutions
+  </Card>
+  <Card title="Stay consistent" icon="equals">
+    Match the existing code style in the project
+  </Card>
+  <Card title="Document why" icon="message-question">
+    Comments should explain why, not what
+  </Card>
+  <Card title="Test edge cases" icon="triangle-exclamation">
+    Consider what could go wrong and handle it
+  </Card>
+</CardGroup>
+
+## Pull Request Guidelines
+
+When submitting a PR:
+
+<Steps>
+  <Step title="Descriptive title">
+    Use a clear, concise title that summarizes the change
+    
+    Examples:
+    - `Fix: Button not appearing on organization repos`
+    - `Feature: Add dark mode support`
+    - `Docs: Update installation instructions`
+  </Step>
+  
+  <Step title="Detailed description">
+    Explain:
+    - What problem does this solve?
+    - How does this change fix it?
+    - Any side effects or considerations?
+    - Screenshots/GIFs if UI change
+  </Step>
+  
+  <Step title="Reference issues">
+    Link related issues with `Fixes #123` or `Closes #456`
+  </Step>
+  
+  <Step title="Keep it focused">
+    One PR should address one concern. Split unrelated changes into separate PRs.
+  </Step>
+</Steps>
+
+### PR Checklist
+
+Before submitting, ensure:
+
+- [ ] Code follows the style guidelines above
+- [ ] All tests pass (manual testing for this project)
+- [ ] Button works on different repository types
+- [ ] SPA navigation works correctly
+- [ ] No JavaScript errors in console
+- [ ] Changes are backward compatible
+- [ ] Documentation updated if needed
+
+## Reporting Issues
+
+When reporting a bug:
+
+1. **Search existing issues** first to avoid duplicates
+2. **Use a descriptive title** (e.g., "Button not showing on mobile GitHub")
+3. **Provide details:**
+   - Chrome version
+   - Extension version
+   - Steps to reproduce
+   - Expected vs actual behavior
+   - Screenshots/console errors if applicable
+4. **Suggest a fix** if you have ideas
+
+## License
+
+By contributing, you agree that your contributions will be licensed under the **MIT License**.
+
+```text LICENSE
+MIT License
+
+Copyright (c) 2026
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software...
+```
+
+<Info>
+  See the full [LICENSE](https://github.com/apurv-1/mintlify-oneclick-extension/blob/main/LICENSE) file in the repository.
+</Info>
+
+## Questions?
+
+If you have questions about contributing:
+
+- Open a [GitHub Discussion](https://github.com/apurv-1/mintlify-oneclick-extension/discussions)
+- Check existing issues and pull requests for context
+- Review the [Architecture](/development/architecture) and [Code Structure](/development/code-structure) docs
+
+Thank you for contributing to the Mintlify One-Click Extension!

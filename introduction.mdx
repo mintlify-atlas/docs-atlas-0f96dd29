@@ -1,0 +1,79 @@
+---
+title: Introduction
+description: Get production-quality documentation for any GitHub repository with a single click
+---
+
+The Mintlify One-Click Extension adds a "View Docs on Mintlify" button to every GitHub repository page. When you click it, the extension instantly opens auto-generated, production-quality documentation for that repository on Mintlify.
+
+## What problem does it solve?
+
+Navigating unfamiliar codebases on GitHub can be time-consuming and overwhelming. Reading through source files to understand structure, APIs, and functionality requires significant effort. This extension bridges that gap by providing instant access to comprehensive, AI-generated documentation for any public GitHub repository.
+
+## How it works
+
+The extension operates through a simple workflow:
+
+<Steps>
+  <Step title="Detect GitHub repositories">
+    The extension monitors when you visit GitHub repository pages and automatically identifies the owner and repository name from the URL.
+  </Step>
+  
+  <Step title="Add action button">
+    A "View Docs on Mintlify" button is injected into the repository's action bar, alongside the Watch, Fork, and Star buttons.
+  </Step>
+  
+  <Step title="Generate documentation URL">
+    When clicked, the extension transforms the GitHub URL into a Mintlify documentation URL using the pattern: `github.com/owner/repo` → `mintlify.com/owner/repo`
+  </Step>
+  
+  <Step title="Open documentation">
+    Your browser opens the Mintlify documentation page in a new tab, where you can explore the auto-generated docs.
+  </Step>
+</Steps>
+
+## Key features
+
+<CardGroup cols={2}>
+  <Card title="One-click access" icon="mouse-pointer">
+    Access documentation directly from any GitHub repository page with a single click
+  </Card>
+  
+  <Card title="Universal compatibility" icon="globe">
+    Works with any public GitHub repository, from small personal projects to large open-source libraries
+  </Card>
+  
+  <Card title="Seamless integration" icon="puzzle-piece">
+    Button blends naturally into GitHub's native UI alongside existing repository actions
+  </Card>
+  
+  <Card title="Toggle control" icon="toggle-on">
+    Enable or disable the extension anytime through the popup interface
+  </Card>
+</CardGroup>
+
+<Tip>
+  The extension works on popular repositories like `facebook/react`, `vercel/next.js`, `microsoft/typescript`, and millions of others.
+</Tip>
+
+## Examples
+
+Here's how the URL transformation works:
+
+| GitHub Repository | Mintlify Documentation |
+| --- | --- |
+| `github.com/facebook/react` | `mintlify.com/facebook/react` |
+| `github.com/vercel/next.js` | `mintlify.com/vercel/next.js` |
+| `github.com/microsoft/typescript` | `mintlify.com/microsoft/typescript` |
+| `github.com/langchain-ai/langchain` | `mintlify.com/langchain-ai/langchain` |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install the extension in your Chrome browser
+  </Card>
+  
+  <Card title="Quick start" icon="rocket" href="/quickstart">
+    Learn how to use the extension on your first repository
+  </Card>
+</CardGroup>

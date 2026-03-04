@@ -1,0 +1,208 @@
+---
+title: "Manifest configuration"
+description: "Complete reference for the extension's manifest.json configuration"
+---
+
+The `manifest.json` file defines the extension's structure, permissions, and components using Chrome Extension Manifest V3.
+
+## Complete manifest structure
+
+```json manifest.json
+{
+  "manifest_version": 3,
+  "name": "Mintlify Docs — Auto Docs for Any GitHub Repo",
+  "short_name": "Mintlify Docs",
+  "version": "1.0.0",
+  "description": "One-click production-quality documentation for any GitHub repository, powered by Mintlify.",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://github.com/*"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["https://github.com/*"]
+    }
+  ]
+}
+```
+
+## Core metadata
+
+<ParamField path="manifest_version" type="integer" required>
+  Uses Manifest V3 (value: `3`), the latest Chrome extension platform
+</ParamField>
+
+<ParamField path="name" type="string" required>
+  Full extension name: "Mintlify Docs — Auto Docs for Any GitHub Repo"
+</ParamField>
+
+<ParamField path="short_name" type="string">
+  Shortened name: "Mintlify Docs" (used when space is limited)
+</ParamField>
+
+<ParamField path="version" type="string" required>
+  Extension version: `1.0.0`
+</ParamField>
+
+<ParamField path="description" type="string" required>
+  Concise description of the extension's functionality
+</ParamField>
+
+## Permissions
+
+<ParamField path="permissions" type="array" required>
+  API permissions required by the extension:
+  
+  - `storage` - Access to chrome.storage.sync for saving user preferences
+  - `activeTab` - Access to the currently active tab when user interacts with the extension
+</ParamField>
+
+<ParamField path="host_permissions" type="array" required>
+  URL patterns where the extension can run:
+  
+  - `https://github.com/*` - All GitHub.com pages
+</ParamField>
+
+## Extension action (popup)
+
+<ParamField path="action" type="object" required>
+  Defines the extension's toolbar icon and popup
+  
+  <Accordion title="Action configuration">
+    **default_popup**: `popup/popup.html` - HTML file for the popup interface
+    
+    **default_icon**: Icon sizes for the browser toolbar
+    - `16px` - Favicon and smaller displays
+    - `48px` - Extension management page
+    - `128px` - Installation and Chrome Web Store
+    
+    All icons located in `icons/` directory
+  </Accordion>
+</ParamField>
+
+## Extension icons
+
+<ParamField path="icons" type="object" required>
+  Global extension icons displayed in various Chrome UI surfaces:
+  
+  ```json
+  {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+  ```
+</ParamField>
+
+## Content scripts
+
+<ParamField path="content_scripts" type="array" required>
+  Scripts and styles injected into GitHub pages
+  
+  <Accordion title="Content script configuration">
+    **matches**: `["https://github.com/*"]`
+    - Injects on all GitHub.com pages
+    
+    **js**: `["content/content.js"]`
+    - Main content script that adds the "View Docs" button
+    
+    **css**: `["content/content.css"]`
+    - Styles for the injected button
+    
+    **run_at**: `document_idle`
+    - Runs after DOM is complete but before window.onload
+    - Optimal for DOM manipulation without blocking page load
+  </Accordion>
+</ParamField>
+
+## Background service worker
+
+<ParamField path="background" type="object">
+  Background script that handles extension lifecycle events
+  
+  ```json
+  {
+    "service_worker": "background/service-worker.js"
+  }
+  ```
+  
+  Initializes default settings and handles extension installation.
+</ParamField>
+
+## Web accessible resources
+
+<ParamField path="web_accessible_resources" type="array">
+  Resources that can be accessed by web pages
+  
+  ```json
+  [
+    {
+      "resources": ["icons/*"],
+      "matches": ["https://github.com/*"]
+    }
+  ]
+  ```
+  
+  Allows GitHub pages to access extension icon assets if needed.
+</ParamField>
+
+## File structure
+
+The manifest references files in this structure:
+
+```
+.
+├── manifest.json
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
+├── content/
+│   ├── content.js
+│   └── content.css
+├── popup/
+│   ├── popup.html
+│   ├── popup.js
+│   └── popup.css
+└── background/
+    └── service-worker.js
+```
+
+## Related documentation
+
+<CardGroup cols={2}>
+  <Card title="Content script" icon="code" href="/reference/content-script">
+    Learn about the content.js implementation
+  </Card>
+  <Card title="Popup interface" icon="window" href="/reference/popup-interface">
+    Explore the popup UI components
+  </Card>
+</CardGroup>

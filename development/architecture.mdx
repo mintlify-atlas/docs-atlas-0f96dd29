@@ -1,0 +1,181 @@
+---
+title: 'Architecture'
+description: 'Understanding the Chrome Extension Manifest V3 architecture'
+---
+
+The Mintlify One-Click Extension is built on **Chrome Extension Manifest V3**, leveraging a clean separation of concerns across three main components that communicate through Chrome's messaging and storage APIs.
+
+## Core Components
+
+The extension architecture consists of three independent components:
+
+<CardGroup cols={3}>
+  <Card title="Content Script" icon="code">
+    Injected into GitHub pages to add the "View Docs" button
+  </Card>
+  <Card title="Popup" icon="window-maximize">
+    Browser action UI for quick access and settings
+  </Card>
+  <Card title="Service Worker" icon="gear">
+    Background process handling installation and lifecycle events
+  </Card>
+</CardGroup>
+
+## Manifest Configuration
+
+The extension declares its architecture in `manifest.json`:
+
+```json manifest.json
+{
+  "manifest_version": 3,
+  "name": "Mintlify Docs — Auto Docs for Any GitHub Repo",
+  "permissions": [
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://github.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/*"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  }
+}
+```
+
+<Info>
+  The `run_at: "document_idle"` setting ensures the content script executes after the DOM is fully loaded, preventing race conditions.
+</Info>
+
+## Component Communication
+
+### Storage Sync
+
+Components communicate state through `chrome.storage.sync`, enabling cross-device settings synchronization:
+
+```javascript content/content.js
+chrome.storage.sync.get({ enabled: true }, (settings) => {
+  if (!settings.enabled) {
+    cleanup();
+    return;
+  }
+  // Inject button if enabled
+});
+```
+
+The storage API provides:
+
+- **Persistent settings** across browser sessions
+- **Automatic sync** across user's devices
+- **Real-time updates** via `chrome.storage.onChanged` listener
+
+### Change Listeners
+
+The content script listens for settings changes and updates the UI accordingly:
+
+```javascript content/content.js
+chrome.storage.onChanged.addListener(() => {
+  cleanup();
+  init();
+});
+```
+
+When the user toggles the extension in the popup, this listener immediately removes or re-injects the button.
+
+## Extension Lifecycle
+
+### Installation
+
+The service worker initializes default settings on install:
+
+```javascript background/service-worker.js
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.set({ enabled: true });
+});
+```
+
+### Page Load Sequence
+
+1. User navigates to a GitHub repository
+2. Content script loads at `document_idle`
+3. Script parses the URL to extract `owner/repo`
+4. Script checks if extension is enabled via storage
+5. If valid repo and enabled, button is injected into the DOM
+
+### Runtime Updates
+
+The architecture supports hot updates without page reloads:
+
+<Steps>
+  <Step title="User changes setting">
+    Popup script calls `chrome.storage.sync.set()`
+  </Step>
+  <Step title="Storage event fires">
+    Content script's `onChanged` listener is triggered
+  </Step>
+  <Step title="UI updates">
+    Content script removes old button and re-initializes based on new settings
+  </Step>
+</Steps>
+
+## SPA Detection
+
+GitHub is a Single Page Application (SPA) that dynamically updates content without full page reloads. The extension handles this with a **MutationObserver pattern**:
+
+```javascript content/content.js
+let lastUrl = location.href;
+const observer = new MutationObserver(() => {
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;
+    cleanup();
+    setTimeout(init, 500);
+  }
+});
+observer.observe(document.body, { childList: true, subtree: true });
+```
+
+### How It Works
+
+<AccordionGroup>
+  <Accordion title="URL Change Detection">
+    The observer watches for DOM mutations and compares `location.href` to detect client-side navigation.
+  </Accordion>
+  
+  <Accordion title="Cleanup and Reinit">
+    When navigation occurs, the old button is removed and the initialization logic runs again after a 500ms delay to ensure the new page structure is ready.
+  </Accordion>
+  
+  <Accordion title="Observer Configuration">
+    `{ childList: true, subtree: true }` ensures we catch all DOM changes throughout the entire document tree.
+  </Accordion>
+</AccordionGroup>
+
+<Warning>
+  The 500ms timeout in `setTimeout(init, 500)` accounts for GitHub's DOM rendering delay. Without this, the button injection might fail because the target container doesn't exist yet.
+</Warning>
+
+## Message Passing
+
+While this extension primarily uses storage for communication, Manifest V3 supports additional patterns:
+
+- **`chrome.runtime.sendMessage()`** - For one-time requests
+- **`chrome.tabs.sendMessage()`** - For content script communication
+- **Long-lived connections** - For persistent communication channels
+
+The current architecture keeps things simple by relying on storage sync and change listeners, which is sufficient for the extension's needs.
+
+## Security Model
+
+Manifest V3 enforces several security improvements:
+
+- **Host permissions** are explicitly scoped to `https://github.com/*`
+- **Service workers** replace persistent background pages, reducing resource usage
+- **Content Security Policy** prevents inline script execution
+- **Declared resources** in `web_accessible_resources` control what content scripts can access

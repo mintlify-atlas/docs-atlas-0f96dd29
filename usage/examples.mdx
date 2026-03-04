@@ -1,0 +1,208 @@
+---
+title: "Examples"
+description: "Real-world examples of using the Mintlify One-Click Extension with popular repositories"
+---
+
+Here are practical examples showing how the extension transforms GitHub repository URLs into Mintlify documentation links.
+
+## Popular Open Source Projects
+
+The extension works seamlessly with any public GitHub repository. Here are some examples with popular projects:
+
+### React
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/facebook/react
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/facebook/react
+```
+</CodeGroup>
+
+<Card title="Try it yourself" icon="arrow-right">
+  Navigate to [github.com/facebook/react](https://github.com/facebook/react) and click the "View Docs on Mintlify" button.
+</Card>
+
+### Next.js
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/vercel/next.js
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/vercel/next.js
+```
+</CodeGroup>
+
+### TypeScript
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/microsoft/typescript
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/microsoft/typescript
+```
+</CodeGroup>
+
+### Vue.js
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/vuejs/core
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/vuejs/core
+```
+</CodeGroup>
+
+## Deep Links Within Repositories
+
+The extension works on any page within a repository, not just the main page:
+
+### Issues Page
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/facebook/react/issues
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/facebook/react
+```
+</CodeGroup>
+
+### Pull Requests
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/vercel/next.js/pulls
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/vercel/next.js
+```
+</CodeGroup>
+
+### Specific File or Directory
+
+<CodeGroup>
+```text GitHub URL
+https://github.com/microsoft/typescript/tree/main/src/compiler
+```
+
+```text Mintlify Docs URL
+https://www.mintlify.com/microsoft/typescript
+```
+</CodeGroup>
+
+<Note>
+The extension extracts only the owner and repository name from the URL, so all pages within a repository link to the same Mintlify documentation.
+</Note>
+
+## Filtered Pages
+
+The extension intelligently filters out GitHub pages that aren't repositories. The button **will not appear** on these pages:
+
+<AccordionGroup>
+  <Accordion title="Settings Pages">
+    ```text
+    https://github.com/settings/profile
+    ```
+    The extension recognizes "settings" as a reserved path and won't inject the button.
+  </Accordion>
+
+  <Accordion title="GitHub Marketplace">
+    ```text
+    https://github.com/marketplace
+    ```
+    Marketplace pages are filtered out.
+  </Accordion>
+
+  <Accordion title="Explore and Trending">
+    ```text
+    https://github.com/explore
+    https://github.com/trending
+    ```
+    These discovery pages don't represent specific repositories.
+  </Accordion>
+
+  <Accordion title="Authentication Pages">
+    ```text
+    https://github.com/login
+    https://github.com/signup
+    ```
+    Login and signup pages are excluded.
+  </Accordion>
+</AccordionGroup>
+
+### Complete List of Reserved Paths
+
+The extension filters out URLs starting with these paths:
+
+```javascript
+const reserved = [
+  "settings", "marketplace", "explore", "topics", "trending",
+  "collections", "events", "sponsors", "login", "signup",
+  "notifications", "new", "organizations", "features", "pricing",
+];
+```
+
+## Edge Cases
+
+### Invalid Repository URLs
+
+The button won't appear if the URL doesn't contain both an owner and repository name:
+
+<CodeGroup>
+```text Invalid - No Repository
+https://github.com/facebook
+```
+
+```text Valid - Owner and Repo
+https://github.com/facebook/react
+```
+</CodeGroup>
+
+### Trailing Slashes
+
+The extension handles trailing slashes automatically:
+
+<CodeGroup>
+```text Without Trailing Slash
+https://github.com/vercel/next.js
+```
+
+```text With Trailing Slash
+https://github.com/vercel/next.js/
+```
+</CodeGroup>
+
+Both URLs produce the same Mintlify link: `https://www.mintlify.com/vercel/next.js`
+
+## Using the Popup for Direct Access
+
+The extension popup shows the current repository and provides a direct link:
+
+<Steps>
+  <Step title="Navigate to any repository page">
+    For example: `https://github.com/facebook/react/blob/main/README.md`
+  </Step>
+  
+  <Step title="Click the extension icon">
+    The popup opens showing "facebook/react" as the repository name.
+  </Step>
+  
+  <Step title="Click the popup link">
+    The popup's "View Docs on Mintlify" button opens the docs in a new tab.
+  </Step>
+</Steps>
+
+<Tip>
+The popup provides an alternative way to access Mintlify docs even when the extension is disabled, as long as you're on a valid GitHub repository page.
+</Tip>

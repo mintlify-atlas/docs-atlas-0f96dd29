@@ -1,0 +1,69 @@
+---
+title: "Overview"
+description: "Learn how to use the Mintlify One-Click Extension on GitHub repositories"
+---
+
+The Mintlify One-Click Extension seamlessly integrates with GitHub, adding a button to any repository page that lets you view Mintlify-generated documentation with a single click.
+
+## Where the Button Appears
+
+When you visit a GitHub repository page, the extension automatically injects a "View Docs on Mintlify" button into the repository's action bar at the top of the page. The button appears alongside other repository actions like Watch, Fork, and Star.
+
+The button is injected into the following locations:
+- `ul.pagehead-actions` (classic GitHub layout)
+- `.d-flex.gap-2 .d-flex` (newer GitHub layouts)
+- `#repository-details-container ul` (alternative layouts)
+
+## How It Works
+
+The extension works on any valid GitHub repository URL following this pattern:
+
+```
+https://github.com/{owner}/{repo}
+```
+
+### URL Transformation
+
+When you click the button, the extension transforms the GitHub URL to a Mintlify URL:
+
+<CodeGroup>
+```text Input
+https://github.com/facebook/react
+```
+
+```text Output
+https://www.mintlify.com/facebook/react
+```
+</CodeGroup>
+
+The transformation extracts the repository owner and name from the GitHub URL and constructs the corresponding Mintlify documentation URL.
+
+## Using the Extension
+
+<Steps>
+  <Step title="Navigate to a GitHub repository">
+    Open any GitHub repository page in your browser, such as `https://github.com/vercel/next.js`.
+  </Step>
+  
+  <Step title="Locate the button">
+    Look for the "View Docs on Mintlify" button in the repository action bar at the top of the page.
+  </Step>
+  
+  <Step title="Click to view docs">
+    Click the button to open the Mintlify-generated documentation in a new tab.
+  </Step>
+</Steps>
+
+<Note>
+The button only appears when the extension is enabled and you're viewing a valid repository page. It won't appear on GitHub settings, marketplace, or other non-repository pages.
+</Note>
+
+## Automatic Updates
+
+The extension uses a MutationObserver to detect when you navigate between pages on GitHub (using GitHub's single-page application navigation). When the URL changes, the extension automatically:
+
+1. Removes the button from the previous page
+2. Checks if the new page is a valid repository
+3. Injects the button if appropriate
+
+This ensures the button always appears on repository pages without requiring a full page refresh.

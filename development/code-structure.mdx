@@ -1,0 +1,325 @@
+---
+title: 'Code Structure'
+description: 'File organization and key functions in the extension'
+---
+
+The extension follows a clean, modular structure with each component in its own directory. This page documents the purpose of each file and the key functions that power the extension.
+
+## Directory Layout
+
+```
+source/
+├── manifest.json          # Extension configuration
+├── content/
+│   ├── content.js         # Main logic for button injection
+│   └── content.css        # Button styling
+├── popup/
+│   ├── popup.html         # Extension popup UI
+│   ├── popup.js           # Popup interaction logic
+│   └── popup.css          # Popup styling
+├── background/
+│   └── service-worker.js  # Background service worker
+└── icons/
+    ├── icon16.png
+    ├── icon48.png
+    └── icon128.png
+```
+
+## Content Script
+
+### `content/content.js`
+
+The heart of the extension. Runs on every GitHub page and handles button injection.
+
+<CodeGroup>
+
+```javascript parseGitHubRepo()
+function parseGitHubRepo() {
+  const path = window.location.pathname.replace(/^\//"", "").replace(/\/$/"", "");
+  const segments = path.split("/");
+  if (segments.length < 2) return null;
+
+  const owner = segments[0];
+  const repo = segments[1];
+
+  const reserved = [
+    "settings", "marketplace", "explore", "topics", "trending",
+    "collections", "events", "sponsors", "login", "signup",
+    "notifications", "new", "organizations", "features", "pricing",
+  ];
+  if (reserved.includes(owner)) return null;
+
+  return { owner, repo, fullName: `${owner}/${repo}` };
+}
+```
+
+```javascript getMintlifyUrl()
+function getMintlifyUrl(owner, repo) {
+  return `${MINTLIFY_BASE}/${owner}/${repo}`;
+}
+```
+
+```javascript injectActionButton()
+function injectActionButton(owner, repo) {
+  if (document.getElementById(ACTION_BTN_ID)) return;
+
+  const actionList = document.querySelector(
+    'ul.pagehead-actions, .d-flex.gap-2 .d-flex, #repository-details-container ul'
+  );
+
+  if (!actionList) return;
+
+  const li = document.createElement("li");
+  li.style.display = "inline-block";
+  li.id = ACTION_BTN_ID;
+
+  const link = document.createElement("a");
+  link.href = getMintlifyUrl(owner, repo);
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.className = "mintlify-repo-action-btn";
+  link.innerHTML = `
+    <span>View Docs on Mintlify</span>
+    <svg>...</svg>
+  `;
+
+  li.appendChild(link);
+  actionList.insertBefore(li, actionList.firstChild);
+}
+```
+
+</CodeGroup>
+
+### Key Functions Explained
+
+#### `parseGitHubRepo()` <small>content/content.js:7</small>
+
+Extracts the repository owner and name from the current URL.
+
+**Returns:**
+- `{ owner, repo, fullName }` if valid repository page
+- `null` if not a repository or reserved GitHub path
+
+**Reserved Owner Names:**
+
+To avoid false positives, the function filters out GitHub's special paths:
+
+<Tabs>
+  <Tab title="Account Pages">
+    - `settings`
+    - `login`
+    - `signup`
+    - `notifications`
+  </Tab>
+  <Tab title="Discovery">
+    - `explore`
+    - `topics`
+    - `trending`
+    - `collections`
+  </Tab>
+  <Tab title="Other">
+    - `marketplace`
+    - `events`
+    - `sponsors`
+    - `organizations`
+    - `features`
+    - `pricing`
+  </Tab>
+</Tabs>
+
+This ensures the extension only activates on actual repository pages like `github.com/facebook/react`, not on `github.com/explore` or `github.com/settings`.
+
+#### `getMintlifyUrl()` <small>content/content.js:25</small>
+
+Constructs the Mintlify documentation URL.
+
+**Pattern:** `https://www.mintlify.com/{owner}/{repo}`
+
+#### `injectActionButton()` <small>content/content.js:29</small>
+
+Creates and injects the "View Docs on Mintlify" button into GitHub's UI.
+
+**Target selectors:**
+- `ul.pagehead-actions` - Standard repo action list
+- `.d-flex.gap-2 .d-flex` - Alternative layout
+- `#repository-details-container ul` - Mobile/responsive layout
+
+<Note>
+  The function checks for existing button via `ACTION_BTN_ID` to prevent duplicate injections.
+</Note>
+
+#### `cleanup()` <small>content/content.js:60</small>
+
+Removes the injected button from the DOM. Called when:
+- Extension is disabled
+- User navigates to a non-repository page
+- Before re-injection during SPA navigation
+
+#### `init()` <small>content/content.js:65</small>
+
+Main initialization function that:
+1. Checks if extension is enabled via `chrome.storage.sync`
+2. Parses the current URL
+3. Injects the button if valid
+
+### `content/content.css`
+
+Defines the button's visual style to match GitHub's design system:
+
+```css content/content.css
+.mintlify-repo-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 12px;
+  height: 28px;
+  background: #0D9373;
+  color: #fff !important;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mintlify-repo-action-btn:hover {
+  background: #0b7d63;
+}
+```
+
+**Design principles:**
+- **Brand color:** `#0D9373` (Mintlify green)
+- **Height:** 28px to match GitHub's action buttons
+- **Font:** System font stack matching GitHub
+- **Hover state:** Darker green (`#0b7d63`) for feedback
+
+## Popup
+
+### `popup/popup.html`
+
+Provides a minimal UI with:
+- Hero CTA to open docs for current repo
+- Toggle switch to enable/disable the extension
+
+```html popup/popup.html
+<a class="hero-cta" id="openDocsBtn" href="#" target="_blank">
+  <div class="hero-left">
+    <svg class="hero-icon">...</svg>
+    <div>
+      <span class="hero-title" id="heroTitle">View Docs on Mintlify</span>
+      <span class="hero-repo" id="repoName"></span>
+    </div>
+  </div>
+  <svg class="hero-external">...</svg>
+</a>
+
+<div class="settings">
+  <div class="setting-row">
+    <label for="toggleEnabled">Extension enabled</label>
+    <label class="switch">
+      <input type="checkbox" id="toggleEnabled" checked>
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+```
+
+### `popup/popup.js`
+
+Handles popup interactions:
+
+<Steps>
+  <Step title="Load settings">
+    Reads `enabled` state from `chrome.storage.sync` and updates toggle
+  </Step>
+  <Step title="Get active tab">
+    Uses `chrome.tabs.query()` to get current GitHub repo
+  </Step>
+  <Step title="Update UI">
+    Sets hero title and repo name based on current page
+  </Step>
+  <Step title="Listen for changes">
+    Saves toggle state back to storage when user clicks
+  </Step>
+</Steps>
+
+```javascript popup/popup.js
+toggleEnabled.addEventListener("change", () => {
+  chrome.storage.sync.set({ enabled: toggleEnabled.checked });
+});
+```
+
+### `popup/popup.css`
+
+Defines the popup's 320px width interface with:
+- Hero CTA button (green with hover state)
+- Custom toggle switch component
+- Disabled state styling (gray)
+
+## Background
+
+### `background/service-worker.js`
+
+Minimal service worker with two responsibilities:
+
+```javascript background/service-worker.js
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.set({ enabled: true });
+});
+
+chrome.action.onClicked.addListener((tab) => {
+  if (!tab.url || !tab.url.startsWith("https://github.com/")) return;
+
+  const path = new URL(tab.url).pathname.replace(/^\//"", "").replace(/\/$/"", "");
+  const segments = path.split("/");
+  if (segments.length < 2) return;
+
+  const owner = segments[0];
+  const repo = segments[1];
+  const mintlifyUrl = `https://www.mintlify.com/${owner}/${repo}`;
+
+  chrome.tabs.create({ url: mintlifyUrl });
+});
+```
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download">
+    Sets default `enabled: true` when extension is first installed
+  </Card>
+  <Card title="Icon Click" icon="mouse-pointer">
+    Opens Mintlify docs in new tab when extension icon is clicked (alternative to popup)
+  </Card>
+</CardGroup>
+
+## CSS Styling Approach
+
+The extension uses a **scoped styling** strategy:
+
+- **Inline button** (`content.css`) uses specific class names (`mintlify-repo-action-btn`) to avoid conflicts with GitHub's styles
+- **Popup** (`popup.css`) uses a clean slate with reset styles since it's an isolated context
+- **`!important` flags** ensure color overrides work on GitHub's complex CSS
+
+<Warning>
+  Avoid generic class names in content scripts. GitHub's CSS could override your styles or vice versa.
+</Warning>
+
+## Constants and Configuration
+
+```javascript content/content.js
+const MINTLIFY_BASE = "https://www.mintlify.com";
+const ACTION_BTN_ID = "mintlify-action-btn";
+```
+
+- **`MINTLIFY_BASE`**: Base URL for all Mintlify docs links
+- **`ACTION_BTN_ID`**: Unique ID to prevent duplicate button injection
+
+## IIFE Pattern
+
+Both `content.js` and `popup.js` use Immediately Invoked Function Expressions:
+
+```javascript
+(function () {
+  "use strict";
+  // Extension code
+})();
+```
+
+This creates a private scope and prevents variable pollution in the global namespace.
