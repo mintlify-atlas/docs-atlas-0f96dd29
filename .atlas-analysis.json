@@ -1,0 +1,61 @@
+{
+  "projectType": "general",
+  "projectName": "Mintlify One-Click Extension",
+  "projectDescription": "Chrome extension that adds one-click access to Mintlify documentation for any GitHub repository.",
+  "theme": "mint",
+  "primaryColor": "#0D9373",
+  "lightColor": null,
+  "darkColor": null,
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "installation",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Usage",
+        "pages": [
+          "usage/overview",
+          "usage/enabling-disabling",
+          "usage/examples"
+        ]
+      },
+      {
+        "group": "Development",
+        "pages": [
+          "development/architecture",
+          "development/code-structure",
+          "development/contributing"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/manifest",
+          "reference/content-script",
+          "reference/popup-interface"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "One-click access to Mintlify docs from GitHub repos",
+    "Seamless GitHub UI integration with action button",
+    "Toggle extension on/off via popup interface",
+    "Automatic URL parsing and validation",
+    "SPA-aware navigation handling"
+  ],
+  "publicApiSurface": [
+    "manifest.json (Chrome Extension Manifest V3)",
+    "content.js (GitHub page injection)",
+    "popup.js (Extension popup interface)",
+    "service-worker.js (Background processing)",
+    "parseGitHubRepo() (URL parsing utility)",
+    "getMintlifyUrl() (URL construction)",
+    "injectActionButton() (Button injection)"
+  ]
+}
