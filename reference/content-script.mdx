@@ -38,7 +38,7 @@ Extracts repository owner and name from the current GitHub URL.
 
 ```javascript content.js
 function parseGitHubRepo() {
-  const path = window.location.pathname.replace(/^//, "").replace(/\/$/, "");
+  const path = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
   const segments = path.split("/");
   if (segments.length < 2) return null;
 
